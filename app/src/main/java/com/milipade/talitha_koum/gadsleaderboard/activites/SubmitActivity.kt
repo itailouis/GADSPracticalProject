@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout
@@ -49,17 +50,35 @@ class SubmitActivity : AppCompatActivity() {
             val callback = object : Callback<Void> {
                 override fun onFailure(call: Call<Void>?, t:Throwable?) {
                     Log.e("First", "Problem calling  API {${t?.message}}")
+
+                    val dialogView = layoutInflater.inflate(R.layout.dialog_submit_failed, null)
+
+                    val customDialog = AlertDialog.Builder(this@SubmitActivity)
+                        .setView(dialogView)
+                        .show()
+
+                    dialogView.setOnClickListener {
+                        customDialog.dismiss()
+                    }
                 }
 
                 override fun onResponse(call: Call<Void>?, response: Response<Void>?) {
                     response?.isSuccessful.let {
                         Log.e("First", "Done calling  Api ")
+
+                        val dialogView = layoutInflater.inflate(R.layout.dialog_submit_sucessful, null)
+
+                        val customDialog = AlertDialog.Builder(this@SubmitActivity)
+                            .setView(dialogView)
+                            .show()
+
+                        dialogView.setOnClickListener {
+                            customDialog.dismiss()
+                        }
                     }
                 }
             }
-
-
-            apiClient.submitForm(callback,"itai louis","zulu","https://github.com/itailouis/GADSPracticalProject","itaizulu@gmail.coom")
+            apiClient.submitForm(callback,firstName.text.toString(),lastName.text.toString(),githubLink.text.toString(),emailAddress.text.toString())
         }
     }
 
